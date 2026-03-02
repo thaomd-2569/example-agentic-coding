@@ -10,3 +10,4 @@ build/
 coverage/
 *.tmp
 *.swp
+node_modules

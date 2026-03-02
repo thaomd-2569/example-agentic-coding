@@ -7,7 +7,7 @@ const SEED_DATA: Transaction[] = [
     id: '1',
     amount: 50000,
     type: 'expense',
-    category: 'Food',
+    categoryId: 'cat-food',
     date: new Date().toISOString().slice(0, 10),
     note: 'Seed: Lunch',
   },

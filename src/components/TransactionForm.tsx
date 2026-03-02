@@ -1,18 +1,18 @@
 import { useState } from 'react'
-import { CATEGORIES } from '../types/transaction'
 import { useTransactionStore } from '../store/useTransactionStore'
+import { useCategoryStore } from '../store/useCategoryStore'
 
 interface FormValues {
   amount: string
   type: 'income' | 'expense'
-  category: string
+  categoryId: string
   date: string
   note: string
 }
 
 interface FormErrors {
   amount?: string
-  category?: string
+  categoryId?: string
   date?: string
   note?: string
 }
@@ -22,13 +22,17 @@ const todayISO = () => new Date().toISOString().slice(0, 10)
 const defaultValues: FormValues = {
   amount: '',
   type: 'expense',
-  category: '',
+  categoryId: '',
   date: todayISO(),
   note: '',
 }
 
 export default function TransactionForm() {
   const addTransaction = useTransactionStore((s) => s.addTransaction)
+  const rawCategories = useCategoryStore((s) => s.categories)
+  const categories = [...rawCategories].sort((a, b) =>
+    a.name.localeCompare(b.name)
+  )
   const [values, setValues] = useState<FormValues>(defaultValues)
   const [errors, setErrors] = useState<FormErrors>({})
 
@@ -43,7 +47,7 @@ export default function TransactionForm() {
     ) {
       errs.amount = 'Amount must be a positive integer'
     }
-    if (!values.category) errs.category = 'Category is required'
+    if (!values.categoryId) errs.categoryId = 'Category is required'
     if (!values.date) errs.date = 'Date is required'
     if (values.note && values.note.length > 255)
       errs.note = 'Note must be 255 characters or less'
@@ -60,7 +64,7 @@ export default function TransactionForm() {
     addTransaction({
       amount: Number(values.amount),
       type: values.type,
-      category: values.category,
+      categoryId: values.categoryId,
       date: values.date,
       note: values.note || undefined,
     })
@@ -137,20 +141,20 @@ export default function TransactionForm() {
             Category
           </label>
           <select
-            name="category"
-            value={values.category}
+            name="categoryId"
+            value={values.categoryId}
             onChange={handleChange}
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
           >
             <option value="">Select category…</option>
-            {CATEGORIES.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
               </option>
             ))}
           </select>
-          {errors.category && (
-            <p className="mt-1 text-xs text-red-600">{errors.category}</p>
+          {errors.categoryId && (
+            <p className="mt-1 text-xs text-red-600">{errors.categoryId}</p>
           )}
         </div>
 
