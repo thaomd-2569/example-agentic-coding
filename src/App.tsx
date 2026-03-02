@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Toaster } from 'react-hot-toast'
 import { LayoutList, Tag, PieChart as PieIcon } from 'lucide-react'
 import TransactionForm from './components/TransactionForm'
 import TransactionList from './components/TransactionList'
@@ -55,6 +56,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Toaster position="bottom-center" toastOptions={{ duration: 3000 }} />
       {/* Top nav */}
       <nav className="sticky top-0 z-10 border-b border-gray-200 bg-white shadow-sm">
         <div className="mx-auto flex max-w-2xl items-center gap-1 px-4">

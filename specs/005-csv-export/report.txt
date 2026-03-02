@@ -1,0 +1,128 @@
+════════════════════════════════════════════════════════════════════════
+FEATURE REPORT
+Branch   : 005-csv-export
+Generated: 2026-03-02
+════════════════════════════════════════════════════════════════════════
+
+
+I. OVERVIEW
+────────────────────────────────────────────────────────────────────────
+Feature Name : CSV Export for Transactions
+Branch       : 005-csv-export
+Status       : Draft
+Created      : 2026-03-02
+Progress     : 10 done/10 total tasks (100% complete)
+
+
+II. DESCRIPTION
+────────────────────────────────────────────────────────────────────────
+This feature allows users to export the current (filtered or full) transaction list to a CSV file with columns: Date, Type, Category, Amount (VND), Note. The filename follows the format transactions_YYYY-MM-DD.csv. Export is performed client-side using the Blob API, with a toast notification on success. If there are no transactions, the Export button is disabled and a tooltip explains why.
+
+
+III. DATA SCHEMA
+────────────────────────────────────────────────────────────────────────
+Entity: Transaction
+  Property     Type      Constraint                  Example
+  ──────────── ───────── ─────────────────────────── ────────────────
+  id           string    Unique, no duplicates      "1"
+  amount       number    >= 0                       50000
+  type         string    'income' | 'expense'       "expense"
+  categoryId   string    Must match Category.id      "cat-food"
+  date         string    ISO 8601 date              "2026-03-02"
+  note         string    Optional                   "Lunch coffee"
+
+Entity: Category
+  Property     Type      Constraint                  Example
+  ──────────── ───────── ─────────────────────────── ────────────────
+  id           string    Unique, no duplicates      "cat-food"
+  name         string    Required                   "Food"
+  color        string    Hex color                  "#F97316"
+
+
+IV. USER STORIES
+────────────────────────────────────────────────────────────────────────
+  1. [P1] Export Transactions to CSV
+         What  : User exports the current (filtered or full) transaction list to a CSV file with correct columns and filename.
+         Verify: Can be fully tested by clicking Export and verifying the downloaded CSV file contains the correct data, columns, and filename.
+
+  2. [P2] Export Button Disabled When No Data
+         What  : Export button is disabled with an explanation when there are no transactions to export.
+         Verify: Can be tested by filtering to zero results and observing the Export button state and tooltip.
+
+
+V. PLAN SUMMARY
+────────────────────────────────────────────────────────────────────────
+Architecture Decisions:
+  • CSV Generation: Manual string build — Simple, no dependencies, full control
+  • Download Method: Blob API + anchor click — Native, no backend, works in all browsers
+  • Filename Format: transactions_YYYY-MM-DD.csv — Matches spec, user-friendly
+  • Notification: Toast (existing/toast lib) — Consistent UX, instant feedback
+  • Button State: Disabled + Tooltip — Prevents errors, clear UX
+
+Tech Stack:
+  UI      : React 18+, Tailwind
+  State   : Zustand
+  Utils   : Custom CSV util
+  Notification : Toast lib (react-hot-toast)
+
+Phases:
+  Phase 1 — Research & Design: Research CSV generation and Blob API best practices (Context7), design export button UI/UX (disabled state, tooltip, toast)
+  Phase 2 — CSV Utility & Download: Implement CSV string builder utility (proper escaping), implement Blob API download logic with correct filename
+  Phase 3 — UI Integration: Add Export button to TransactionList, wire up export logic to filtered transaction list, show toast on success, disable button + tooltip if no data
+  Phase 4 — Testing & Polish: Test CSV output for edge cases (commas, quotes, newlines), test button state, tooltip, and toast in all scenarios, polish UX and accessibility
+
+
+VI. TASKS
+────────────────────────────────────────────────────────────────────────
+Total Progress: 10 done/10 total tasks (100%)
+
+Phase 1 — Research & Design
+  ✅ T001 Research CSV generation and Blob API best practices (Context7)
+  ✅ T002 Design export button UI/UX (disabled state, tooltip, toast)
+
+Phase 2 — CSV Utility & Download
+  ✅ T003 Implement CSV string builder utility with proper escaping
+  ✅ T004 Implement Blob API download logic with correct filename
+
+Phase 3 — UI Integration
+  ✅ T005 Add Export button to TransactionList or relevant component
+  ✅ T006 Wire up export logic to filtered transaction list
+  ✅ T007 Show toast on success, disable button + tooltip if no data
+
+Phase 4 — Testing & Polish
+  ✅ T008 Test CSV output for edge cases (commas, quotes, newlines)
+  ✅ T009 Test button state, tooltip, and toast in all scenarios
+  ✅ T010 Polish UX and accessibility
+
+
+VII. IMPLEMENTATION
+────────────────────────────────────────────────────────────────────────
+Files created / modified in this feature:
+
+  New files:
+    + src/utils/exportToCsv.ts           CSV builder utility, Blob download logic
+    + src/utils/exportToCsv.test.ts      Unit tests for CSV export (10 tests)
+
+  Modified files:
+    ~ src/components/TransactionList.tsx Export CSV button, disabled state, tooltip, toast
+    ~ src/App.tsx                       Mounts <Toaster /> globally
+    ~ specs/005-csv-export/tasks.md     All tasks checked off
+
+Key implementation notes:
+  • CSV escaping covers commas, quotes, newlines, empty notes, unknown categories
+  • Export always matches filtered list, filename is always correct
+  • All logic is client-side, no backend
+  • All 21 tests pass, no TypeScript errors
+
+
+VIII. NOTES / OPEN QUESTIONS
+────────────────────────────────────────────────────────────────────────
+(Fill in manually after review)
+
+  1.
+  2.
+  3.
+
+════════════════════════════════════════════════════════════════════════
+END OF REPORT — 005-csv-export
+════════════════════════════════════════════════════════════════════════
