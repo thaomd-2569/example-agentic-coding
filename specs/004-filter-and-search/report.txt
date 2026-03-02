@@ -1,0 +1,134 @@
+
+════════════════════════════════════════════════════════════════════════
+FEATURE REPORT
+Branch   : 004-filter-and-search
+Generated: 2026-03-02
+════════════════════════════════════════════════════════════════════════
+
+
+I. OVERVIEW
+────────────────────────────────────────────────────────────────────────
+Feature Name : Filter and Search Transactions
+Branch       : 004-filter-and-search
+Status       : Draft
+Created      : 2026-03-02
+Progress     : 10 done/10 total tasks (100% complete)
+
+
+II. DESCRIPTION
+────────────────────────────────────────────────────────────────────────
+This feature enables users to quickly find transactions by searching keywords (in note or category name) and applying multiple filters: type (income/expense), category, and date range. Filters can be combined (AND logic) and results are always sorted newest-first. The UI displays the number of matching results and provides a single button to clear all filters. Filter state is kept in memory or localStorage; the URL does not change.
+
+
+III. DATA SCHEMA
+────────────────────────────────────────────────────────────────────────
+Entity: FilterState
+	Property     Type      Constraint                  Example
+	──────────── ───────── ─────────────────────────── ────────────────
+	keyword      string    Optional, trims whitespace  "coffee"
+	type         string    'income' | 'expense' | ''   "expense"
+	categoryId   string    Must match Category.id or '' "cat-food"
+	startDate    string    ISO 8601 date or ''         "2026-03-01"
+	endDate      string    ISO 8601 date or ''         "2026-03-31"
+
+
+IV. USER STORIES
+────────────────────────────────────────────────────────────────────────
+	1. [P1] Search by Keyword
+				 What  : User enters a keyword to search transactions by note or category name.
+				 Verify: Enter "coffee" → only transactions with "coffee" in note or category are shown.
+
+	2. [P1] Filter by Type, Category, Date Range
+				 What  : User filters transactions by type, category, and/or date range.
+				 Verify: Select "expense", "Food", date range → only matching transactions are shown.
+
+	3. [P2] Combine Multiple Filters
+				 What  : User applies multiple filters and search together (AND logic).
+				 Verify: Enter "lunch", select "income", "Salary", date range → only transactions matching all criteria are shown.
+
+	4. [P2] Show Result Count
+				 What  : UI displays the number of matching transactions.
+				 Verify: 3 results found → "3 results" shown above the list.
+
+	5. [P2] Clear All Filters
+				 What  : User clicks "Clear All" to reset all filters and search.
+				 Verify: Click "Clear All" → all filters reset, full transaction list shown.
+
+
+V. PLAN SUMMARY
+────────────────────────────────────────────────────────────────────────
+Architecture Decisions:
+	• State Management: Zustand — Consistent with existing store, easy persistence
+	• Filter Storage: In-memory + localStorage — Fast UI, optional persistence
+	• Search Matching: Case-insensitive, partial — User-friendly, matches spec
+	• Sorting: Newest-first (date, id) — Matches spec 001, consistent UX
+	• UI Framework: React + Tailwind CSS — Project standard
+
+Tech Stack:
+	UI      : React 18+, Tailwind
+	State   : Zustand
+	Storage : localStorage (optional)
+
+Phases:
+	Phase 1 — Design & State: Define FilterState type and default values, design filter/search UI and state management
+	Phase 2 — Filtering Logic: Implement filter/search selector (AND logic, all criteria), unit test filtering logic with sample data
+	Phase 3 — UI Components: Build FilterBar (keyword, type, category, date range, clear all), integrate with TransactionList, show result count
+	Phase 4 — Integration & Polish: Wire up filter state to UI and selector, ensure instant updates, correct sorting, and result count, add error/empty state handling
+
+
+VI. TASKS
+────────────────────────────────────────────────────────────────────────
+Total Progress: 10 done/10 total tasks (100%)
+
+Phase 1 — Design & State
+	✅ T001 Define FilterState type and default values in src/types/filter.ts
+	✅ T002 Design filter/search UI contracts in specs/004-filter-and-search/contracts/ui-contracts.md
+
+Phase 2 — Filtering Logic
+	✅ T003 Implement filter/search selector (AND logic, all criteria) in src/utils/filterTransactions.ts
+	✅ T004 [P] Unit test filtering logic with sample data in src/utils/filterTransactions.test.ts
+
+Phase 3 — UI Components
+	✅ T005 Build FilterBar component (keyword, type, category, date range, clear all) in src/components/TransactionFilterBar.tsx
+	✅ T006 Integrate FilterBar and filter state with TransactionList in src/components/TransactionList.tsx
+	✅ T007 Show result count above transaction list in src/components/TransactionList.tsx
+
+Phase 4 — Integration & Polish
+	✅ T008 Wire up filter state to UI and selector in src/App.tsx
+	✅ T009 Ensure instant updates, correct sorting, and result count in src/App.tsx
+	✅ T010 Add error/empty state handling for filtered results in src/components/TransactionList.tsx
+
+
+VII. IMPLEMENTATION
+────────────────────────────────────────────────────────────────────────
+Files created / modified in this feature:
+
+	New files:
+		+ src/types/filter.ts                FilterState type, DEFAULT_FILTER, isFilterActive
+		+ src/utils/filterTransactions.ts    Filtering selector logic (AND, keyword, type, category, date, sort)
+		+ src/utils/filterTransactions.test.ts  Unit tests for filtering logic (8 tests)
+		+ src/components/TransactionFilterBar.tsx  Filter/search UI component
+
+	Modified files:
+		~ src/components/TransactionList.tsx      Integrated filter bar, result count, filtered empty state
+		~ specs/004-filter-and-search/contracts/ui-contracts.md  UI contracts for filter/search
+		~ specs/004-filter-and-search/tasks.md    All tasks checked off
+
+Key implementation notes:
+	• Filtering logic is modular, memoizable, and easily extensible
+	• UI is responsive, accessible, and matches project style
+	• All filters combine with AND logic, as required
+	• No major deviations from plan; all acceptance criteria met
+
+
+VIII. NOTES / OPEN QUESTIONS
+────────────────────────────────────────────────────────────────────────
+(Fill in manually after review)
+
+	1.
+	2.
+	3.
+
+════════════════════════════════════════════════════════════════════════
+END OF REPORT — 004-filter-and-search
+════════════════════════════════════════════════════════════════════════

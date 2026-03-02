@@ -139,10 +139,7 @@ T011  Build TransactionItem in src/components/TransactionItem.tsx
 
 1. Complete Phase 1: Setup
 2. Complete Phase 2: Foundational (T005 → T006 + T007)
-3. Complete Phase 3: US1 — form with validation
-4. Complete Phase 4: US2 — list with sorting + color-coding
-5. **STOP and VALIDATE**: Both stories work independently
-6. Demo: Add transactions via form, see them in list
+3. Complete Phasgit
 
 ### Full Scope (add US4)
 
