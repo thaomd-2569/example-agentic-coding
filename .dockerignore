@@ -1,0 +1,9 @@
+# .dockerignore for Vite + React + TypeScript
+node_modules/
+dist/
+build/
+.git/
+*.log*
+.env*
+coverage/
+.DS_Store
